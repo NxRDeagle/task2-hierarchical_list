@@ -1,0 +1,5 @@
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Release\net5.0\publish\task2-hierarchical_list.exe
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Release\net5.0\publish\task2-hierarchical_list.dll
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Release\net5.0\publish\task2-hierarchical_list.deps.json
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Release\net5.0\publish\task2-hierarchical_list.runtimeconfig.json
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Release\net5.0\publish\task2-hierarchical_list.pdb

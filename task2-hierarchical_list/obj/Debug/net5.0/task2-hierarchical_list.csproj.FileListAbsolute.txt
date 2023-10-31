@@ -1,0 +1,16 @@
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\task2-hierarchical_list.exe
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\task2-hierarchical_list.deps.json
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\task2-hierarchical_list.runtimeconfig.json
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\task2-hierarchical_list.runtimeconfig.dev.json
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\task2-hierarchical_list.dll
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\ref\task2-hierarchical_list.dll
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\bin\Debug\net5.0\task2-hierarchical_list.pdb
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.csproj.AssemblyReference.cache
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.AssemblyInfoInputs.cache
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.AssemblyInfo.cs
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.csproj.CoreCompileInputs.cache
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.dll
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\ref\task2-hierarchical_list.dll
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.pdb
+C:\Users\Дима\Source\Repos\task2-hierarchical_list\task2-hierarchical_list\obj\Debug\net5.0\task2-hierarchical_list.genruntimeconfig.cache
