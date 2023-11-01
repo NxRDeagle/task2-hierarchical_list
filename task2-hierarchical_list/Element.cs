@@ -4,18 +4,15 @@ namespace task2_hierarchical_list
 {
     class Element // Базовый класс объектов иерархического списка
     {
-        private static int keyCount = 0;
         private int key, parentKey, level;
-        private string type, name;
+        private string name, type;
 
-        protected Element(int parentKey, string type, string name, int level)
+        protected Element(int key, int parentKey, string name, string type)
         {
-            key = keyCount;
-            keyCount++;
+            this.key = key;
             this.parentKey = parentKey;
-            this.type = type;
             this.name = name;
-            this.level = level;
+            this.type = type;
         }
 
         public int Key

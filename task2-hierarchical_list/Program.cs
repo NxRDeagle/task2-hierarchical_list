@@ -7,6 +7,97 @@ namespace task2_hierarchical_list
 {
     class Program // Основной класс программы
     {
+        static bool CheckLine(string line) // Метод проверки входных данных на корректность формата
+        {
+            string[] columns = line.Split(";");
+            if (columns.Length != 4)
+                return false;
+            if (columns[3] != "0" && columns[3] != "1")
+                return false;
+            int k, p;
+            if (!int.TryParse(columns[0], out k) || !int.TryParse(columns[1], out p))
+                return false;
+            return true;
+        }
+
+        static Folder GetRoot(List<Element> list) // Метод инициализации корневой папки
+        {
+            Folder root;
+            if (!list.Contains(list.Where(i => i.Key == 0).FirstOrDefault()))
+            {
+                root = new Folder(0, -1, "Корневая папка");
+                list.Add(root);
+            }
+            else root = (Folder)list.Where(i => i.Key == 0).FirstOrDefault();
+            return root;
+        }
+
+        static void CheckKeys(ref List<Element> list, ref List<string> errorLines) // Метод проверки ключей, удаляет из рабочего списка ошибочные элементы
+        {
+            Element element, fileChild;
+            for (int i = 0; i < list.Count - 1; i++)
+            {
+                element = list[i];
+                fileChild = list.Where(i => i.Key == element.ParentKey && i.Type == "file").FirstOrDefault();
+                if (!list.Contains(list.Where(i => i.Key == element.ParentKey).FirstOrDefault()))
+                {
+                    errorLines.Add($"Для элемента с ключом '{element.Key}' не был найден родительский элемент под ключом '{element.ParentKey}'");
+                    list.Remove(element);
+                    i--;
+                }
+                else if (list.Contains(fileChild))
+                {
+                    errorLines.Add($"Для элемента с ключом '{element.Key}' родительским элементом был назначен файл");
+                    list.Remove(element);
+                    i--;
+                }
+            }
+        }
+
+        static void SetChildren(List<Element> list) // Метод определения дочерних элементов
+        {
+            Element[] children;
+            foreach (Element element in list)
+            {
+                if (element.Type != "folder") continue;
+                else
+                {
+                    children = list.Where(i => i.ParentKey == element.Key).ToArray();
+                    if (children.Length > 0)
+                    {
+                        foreach (var child in children)
+                            if (list.Contains(child))
+                                ((Folder)element).Add(child);
+                    }
+                }
+            }
+        }
+
+        static void SetLevels(Element element, int level) // Метод распределения иерархических уровней
+        {
+            if (element == null) return;
+            element.Level = level;
+            if (element.Type == "folder")
+            {
+                if (((Folder)element).Children != null)
+                {
+                    foreach (Element child in ((Folder)element).Children)
+                        SetLevels(child, level + 1);
+                }
+            }
+        }
+
+        static void GetHierarchicalList(Element element, ref List<Element> hierarchicalList) // Метод для получения иерархического списка элементов
+        {
+            hierarchicalList.Add(element);
+            if (element.Type == "folder")
+                if (((Folder)element).Children != null)
+                {
+                    foreach (Element child in ((Folder)element).Children)
+                        GetHierarchicalList(child, ref hierarchicalList);
+                }
+        }
+
         static string GetChildrenInfo(List<Element> list, Folder folder) // Метод, возвращающий строку с ключами и именами дочерних элементов папки
         {
             string res = string.Empty;
@@ -37,118 +128,110 @@ namespace task2_hierarchical_list
             }
             return res;
         }
+        static string GetErrors(List<string> errorLines) // Метод, возвращающий строку с ошибками во входных данных
+        {
+            string res = string.Empty;
+            if (errorLines.Count > 0)
+            {
+                res += "\nВ ходе обработки входных данных были обнаружены ошибки:\n";
+                foreach (var item in errorLines)
+                    res += item + "\n";
+            }
+            return res;
+        }
 
         static void Main()
         {
-            string path, line, type, splitter = "\t";
+            string path, line = string.Empty, type, name;
             string[] columns;
-            int level, previousLevel, i = 1;
+            int key, parentKey;
 
             List<Element> list = new List<Element>();
-            Folder root, folder;       
+            List<Element> hierarchicalList = new List<Element>();
+            List<string> errorLines = new List<string>();
+
+            Folder root, folder;
             File file;
-            Element previousFolder, currentFolder;
             StreamReader sr;
 
             while (true) // Цикл для непрерывного ввода
             {
                 Console.WriteLine("Введите путь к текстовому файлу, содержащему объекты иерархического списка: ");
-                path = Console.ReadLine(); // D:/test_task2.txt
+                path = Console.ReadLine(); // D:/test_task2.txt  D:/test_task2_1.txt
                 if (path.Length == 0)
                     break;
+
                 try
                 {
                     sr = new StreamReader(path); // Чтение текстового файла
-                    line = sr.ReadLine();
-
-                    columns = line.Split("\t");
-                    level = Convert.ToInt32(columns[0]);
-                    previousLevel = level;
-
-                    root = new Folder(0, columns[1], level); // Инициализация значения корневой папки
-                    list.Add(root);
-                    folder = root;
-
                     while (line != null) // Построчное считывание данных
                     {
                         line = sr.ReadLine();
                         if (line == null)
                             break;
 
-                        columns = line.Split("\t"); // Получение информации об уровне и типе объекта
-                        level = Convert.ToInt32(columns[0]);
-                        while (i != level)
+                        if (!CheckLine(line)) // Проверка входных данных
                         {
-                            splitter += "\t";
-                            i++;
-                        }
-                        columns = line.Split(splitter);
-                        type = columns[1].Split(" ")[0];
-
-                        if (level == 2) // Если уровень иерархии - 2, то элементы будут добавлены к корневой папке
-                        {
-                            if (type == "Файл")
-                            {
-                                file = new File(0, columns[1], level);
-                                list.Add(file);
-                                root.Add(file);
-                            }
-                            else
-                            {
-                                folder = new Folder(0, columns[1], level);
-                                list.Add(folder);
-                                root.Add(folder);
-                            }
+                            errorLines.Add($"{line} <- неверный формат строки");
+                            continue;
                         }
                         else
                         {
-                            previousFolder = list.Where(i => i.Level == previousLevel - 1 && i.Type == "folder").LastOrDefault();
-                            currentFolder = list.Where(i => i.Level == previousLevel && i.Type == "folder").LastOrDefault();
+                            columns = line.Split(";");
+                            key = int.Parse(columns[0]);
+                            parentKey = int.Parse(columns[1]);
+                            if (key == parentKey)
+                            {
+                                errorLines.Add($"{line} <- родительский ключ элемента не может быть равен основному ключу элемента");
+                                continue;
+                            }
+                            name = columns[2];
+                            type = columns[3];
+                            if (key == 0 && type == "1")
+                            {
+                                errorLines.Add($"{line} <- попытка назначить файлу роль корневой папки");
+                                continue;
+                            }
 
-                            if (type == "Файл") // В зависимости от типа объекта и его уровня относительно предыдущего, создаем элементы и добавляем их в список
+                            if (!list.Contains(list.Where(i => i.Key == key).FirstOrDefault()))
                             {
-                                if (level <= previousLevel)
+                                if (type == "1") // Создание объектов и добавление в список при правильных входных данных
                                 {
-                                    file = new File(previousFolder.Key, columns[1], level);
-                                    ((Folder)previousFolder).Add(file);
+                                    file = new File(key, parentKey, name);
+                                    list.Add(file);
                                 }
                                 else
                                 {
-                                    file = new File(currentFolder.Key, columns[1], level);
-                                    ((Folder)currentFolder).Add(file);
+                                    folder = new Folder(key, parentKey, name);
+                                    list.Add(folder);
                                 }
-                                list.Add(file);
                             }
-                            else
-                            {
-                                if (level <= previousLevel)
-                                {
-                                    folder = new Folder(previousFolder.Key, columns[1], level);
-                                    ((Folder)previousFolder).Add(folder);
-                                }
-                                else
-                                {
-                                    folder = new Folder(currentFolder.Key, columns[1], level);
-                                    ((Folder)currentFolder).Add(folder);
-                                }
-                                list.Add(folder);
-                            }
+                            else errorLines.Add($"{line} <- попытка повторного использования ключа элемента");
                         }
-
-                        i = 1; // Обнуление значений для следующей итерации цикла
-                        splitter = "\t";
-                        if (type == "Папка") 
-                            previousLevel = level;
                     }
                     sr.Close();
 
-                    Console.WriteLine(); // Вывод данных в консоль
-                    foreach (Element el in list)
+                    root = GetRoot(list); // Задаем корневую папку
+
+                    CheckKeys(ref list, ref errorLines); // Ищем ошибки связанные с ключами
+
+                    SetChildren(list); // Добавляем к элементам дочерние 
+
+                    SetLevels(root, 1); // Высчитываем значения иерархических уровней
+
+                    GetHierarchicalList(root, ref hierarchicalList); // Получаем иерархический список, отсортированный по вложенности элементов
+
+
+                    Console.WriteLine(); // Выводим данные в консоль
+                    foreach (Element el in hierarchicalList)
                     {
                         if (el.Type == "folder")
-                            Console.WriteLine(GetChildrenInfo(list, (Folder)el));
+                            Console.WriteLine(GetChildrenInfo(hierarchicalList, (Folder)el));
                     }
-                    Console.WriteLine(GetCatalogInfo(list));
+                    
+                    Console.WriteLine(GetCatalogInfo(hierarchicalList));
+
+                    Console.WriteLine(GetErrors(errorLines));
 
                 }
                 catch (Exception e)
@@ -156,7 +239,7 @@ namespace task2_hierarchical_list
                     Console.WriteLine("Exception: " + e.Message);
                 }
 
-                Console.WriteLine("\n\n\nНажмите enter для повторного выбора файла.");
+                Console.WriteLine("\nНажмите enter для повторного выбора файла.");
                 Console.ReadLine();
             }
         }

@@ -7,7 +7,7 @@ namespace task2_hierarchical_list
     {
         public List<Element> Children { get; set; }
 
-        public Folder(int parentKey, string name, int level) : base(parentKey, "folder", name, level)
+        public Folder(int key, int parentKey, string name) : base(key, parentKey, name, "folder")
         {
             Children = new List<Element>();
         }
