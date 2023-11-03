@@ -142,7 +142,7 @@ namespace task2_hierarchical_list
 
         static void Main()
         {
-            string path, line = string.Empty, type, name;
+            string path, line = string.Empty, name, type;
             string[] columns;
             int key, parentKey;
 
@@ -237,6 +237,16 @@ namespace task2_hierarchical_list
                 catch (Exception e)
                 {
                     Console.WriteLine("Exception: " + e.Message);
+                }
+                finally
+                {
+                    list.Clear();
+                    hierarchicalList.Clear();
+                    errorLines.Clear();
+                    folder = null;
+                    file = null;
+                    root = null;
+                    line = string.Empty;
                 }
 
                 Console.WriteLine("\nНажмите enter для повторного выбора файла.");
